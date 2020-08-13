@@ -1,0 +1,3 @@
+#!/bin/bash
+
+DEBUG=sigbro-property:* npm start

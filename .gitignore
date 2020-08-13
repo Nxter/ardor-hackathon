@@ -1,0 +1,16 @@
+.swp
+.pyc
+*.db
+**/__pycache__
+__pycache__
+.vscode
+.vscode/**
+*.pem
+.DS_Store
+env
+env/**
+.sqlite3
+*.egg-info
+.pytest*
+node_modules/**
+debug/

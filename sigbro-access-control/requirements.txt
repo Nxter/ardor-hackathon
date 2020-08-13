@@ -1,0 +1,6 @@
+requests==2.24.0
+click==7.1.2
+pymysql==0.10.0
+peewee==3.13.3
+pika==1.1.0
+sentry-sdk==0.16.3
