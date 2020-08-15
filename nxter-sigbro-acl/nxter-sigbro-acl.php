@@ -56,26 +56,77 @@ function sigbro__is_user_member($user) {
 
 add_filter('the_content', 'sigbro__check_acl');
 
+function access_deny_page() {
+  //$content = '<center><h2>Access Deny</h2></center>';
+  //$content .= '<center>You are NOT a member of our club for Cool Kids</center>';
+  //$content .= '<center>(e.g., there is no valid ticket/membership token in your account)</center>';
+  //$content .= '<br>';
+  //$content .= 'The good news is that you can join us. <a href="https://demo.sigbro.app/copy/">Click here to become a member</a>';
+  $content = '[fl_builder_insert_layout id="267"]';
+
+  return $content;
+}
+
+function access_deny_vip_page() {
+  //$content = '<center><h2>Access Deny</h2></center>';
+  //$content .= '<center>You are NOT a member of our club for Cool Kids</center>';
+  //$content .= '<center>(e.g., there is no valid ticket/membership token in your account)</center>';
+  //$content .= '<br>';
+  //$content .= 'The good news is that you can join us. <a href="https://demo.sigbro.app/copy/">Click here to become a member</a>';
+  $content = '[fl_builder_insert_layout id="322"]';
+
+  return $content;
+}
+
+
+
 function sigbro__check_acl($content) {
+
+  if ( !is_page() ) {
+    return $content;
+  }
+
   $pattern = "/\[sigbro_acl\]/";
+  $pattern_gold = "/\[sigbro_acl_vip\]/";
+
   preg_match_all($pattern, $content, $result); //find all 
+  preg_match_all($pattern_gold, $content, $result_vip); //find all 
+
   $current_user = wp_get_current_user();
   $account = $current_user->user_login;
-  if ( $account == False ) { 
-    // anon user
-    $content = '<h2>Access Deny</h2><p>You should be a Sigbro Member</p>';
-
-  } else if ( count($result[0]) > 0 ) { 
+  if ( count($result[0]) > 0 ) { 
     // check user's status
-    $status = sigbro__is_user_member($account);
-    if ( $status == 'guest' ) {
-      $content = '<h2>Access Deny</h2><p>You should be a Sigbro Member</p>';
+
+    if ( $account == False ) {
+      $content = access_deny_page();
     } else {
-      $content = str_replace('[sigbro_acl]', '', $content);
-    } 
+      $status = sigbro__is_user_member($account);
+      //print("member:".$status);
+      if ( $status == 'guest' ) {
+        $content = access_deny_page();
+      } else {
+        $content = str_replace('[sigbro_acl]', '', $content);
+      }
+    }
+  } elseif (count($result_vip[0]) > 0) {
+    // check if user silver+ member
+    if ( $account == False ) {
+      $content = access_deny_page();
+    } else {
+      $status = sigbro__is_user_member($account);
+      //print("vip:".$status);
+      if ( $status == 'guest' ) {
+        $content = access_deny_page();
+      } elseif ( $status == 'member' ) {
+        $content = access_deny_vip_page();
+      } else {  
+        $content = str_replace('[sigbro_acl_vip]', '', $content);
+      }
+    }
+
+  } 
 
 
-  }
   return $content;
 }
 
