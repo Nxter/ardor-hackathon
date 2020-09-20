@@ -14,13 +14,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.set('json namespace', 2);
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// do not log ping
 app.use('/', indexRouter);
+
+app.use(logger('combined'));
 app.use('/api/v1', apiRouter);
 
 // catch 404 and forward to error handler

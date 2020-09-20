@@ -1,3 +1,4 @@
 #!/bin/bash
 
+export ACCESS_TOKEN=Lae4Sheing
 DEBUG=sigbro-property:* npm start
